@@ -11,7 +11,7 @@
       "program": "${workspaceFolder}/app.js",
       "skipFiles": ["<node_internals>/**"],
       "runtimeArgs": [
-        "--path C:/Users/jason/Documents/Consulting/Lightsum/Mpix.Create/Mpix.Create.ClientJS/src",
+        "--folder C:/Users/jason/Documents/Consulting/Lightsum/Mpix.Create/Mpix.Create.ClientJS/src",
         "--mode all"
       ]
     }

@@ -25,7 +25,10 @@ const doPatch = mode !== "rename";
 folder += "/**/*.{tsx,ts}";
 console.log(`Beginning processing at root folder:  ${folder}...`);
 
-const replaceHtmlInImportRegex = new RegExp(/(import\s.*)(.html)/, "g");
+const replaceHtmlInImportRegex = new RegExp(
+  /((import\s.*)|(\sfrom\s.*)|(import\(.*)|(jest.mock\(.*)|(require\(.*))(\.html)/,
+  "g"
+);
 const files = glob.sync(folder); //.slice(0, 20);
 
 files.forEach((file) => {
@@ -37,8 +40,6 @@ files.forEach((file) => {
       console.log(`Changing file name: ${file} to ${newPath}`);
       fs.renameSync(file, newPath);
       file = newPath;
-    } else {
-      console.log("No file rename needed.");
     }
   }
 
@@ -48,8 +49,6 @@ files.forEach((file) => {
       console.log("Fixing *.html imports");
       data = data.replace(replaceHtmlInImportRegex, "$1");
       fs.writeFileSync(file, data, "utf-8");
-    } else {
-      console.log("No file rename needed.");
     }
   }
 });

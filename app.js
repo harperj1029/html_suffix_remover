@@ -25,11 +25,14 @@ const doPatch = mode !== "rename";
 folder += "/**/*.{tsx,ts}";
 console.log(`Beginning processing at root folder:  ${folder}...`);
 
-const replaceHtmlInImportRegex = new RegExp(
-  /((import\s.*)|(\sfrom\s.*)|(import\(.*)|(jest.mock\(.*)|(require\(.*))(\.html)/,
-  "g"
-);
-const files = glob.sync(folder); //.slice(0, 20);
+const replaceHtmlInImportRegexs = [
+  new RegExp(
+    /((import\s.*)|(\sfrom\s.*)|(import\(.*)|(jest.mock\(.*)|(require\(.*))(\.html)/,
+    "g"
+  ),
+  new RegExp(/(jest\.requireActual\(\n?.*)(\.html)/, "g")
+];
+const files = glob.sync(folder);
 
 files.forEach((file) => {
   console.log(`Processing file: ${file}...`);
@@ -47,7 +50,9 @@ files.forEach((file) => {
     let data = fs.readFileSync(file, "utf-8");
     if (data.indexOf(".html")) {
       console.log("Fixing *.html imports");
-      data = data.replace(replaceHtmlInImportRegex, "$1");
+      replaceHtmlInImportRegexs.forEach((i) => {
+        data = data.replace(i, "$1");
+      });
       fs.writeFileSync(file, data, "utf-8");
     }
   }
